@@ -1,0 +1,88 @@
+Q1. 
+
+Import the zips.json file into your MongoDB. Database name is "population" and 
+collection name is "zipcodes".
+
+Solution:- 
+
+#To question 1
+
+cd "C:\Program Files\MongoDB\Server\5.0\bin"
+
+C:\Program Files\MongoDB\Server\5.0\bin> mongoimport --jsonArray --db population --collection zipcodes --file E:\mongodb\zip.json
+
+Q2. 
+
+Atlanta Population
+
+1. use db.zipcodes.find() to filter results to only the results where city is ATLANTA and state is GA.
+2. use db.zipcodes.aggregate with $match to do the same as above.
+3. use $group to count the number of zip codes in Atlanta.
+4. use $group to find the total population in Atlanta.
+
+Solution:-
+
+#To question 2.1
+
+db.zipcodes.find({$and:[{"city":"ATLANTA"}, {"state":"GA"}]})
+
+#To question 2.2
+
+db.zipcodes.aggregate([{$match:{$and:[{"city":"ATLANTA"},{"state":"GA"}]}}]);
+
+#To question 2.3
+
+db.zipcodes.aggregate([{$group:{_id:"zipcode"},count:{$sum:1}}])
+
+#To question 2.4
+
+
+
+Q3. 
+
+Populations By State
+
+1. use aggregate to calculate the total population for each state
+2. sort the results by population, highest first
+3. limit the results to just the first 3 results. What are the top 3 states in population?
+
+Solution:-
+
+#To question 3.1
+
+db.zipcodes.aggregate([{$group:{_id:{$sum:"pop"}}}])
+
+#To question 3.2
+
+db.zipcodes.aggregate([{$sort:{pop:-1}}])
+
+#To question 3.3
+
+db.zipcodes.find().sort({pop:-1}).limit(3)
+
+Q4. 
+
+Populations by City
+
+1. use aggregate to calculate the total population for each city (you have to use city/state combination). You can use a combination for the _id of the $group: { city: '$city', state: '$state' }
+2. sort the results by population, highest first
+3. limit the results to just the first 3 results. What are the top 3 cities in population?
+4. What are the top 3 cities in population in Texas?
+
+Solution:-
+
+#To question 4.1
+
+
+
+#To question 4.2
+
+db.zipcodes.aggregate([{$sort:{pop:-1}}])
+
+#To question 4.3
+
+db.zipcodes.find().sort({pop:-1}).limit(3)
+
+#To question 4.4
+
+db.zipcodes.find({state:"Texas"}).sort({pop:-1}).limit(3)
